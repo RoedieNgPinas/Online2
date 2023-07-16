@@ -1,22 +1,28 @@
 <?php
-if($_SERVER['REQUEST_METHOD']=='POST'){
-    $username=$_POST['username'];
-    $email=$_POST['email'];
-    $password=$_POST['password'];
+$username = filter_input(INPUT_POST, 'username');
+$email = filter_input(INPUT_POST, 'email');
+$password = filter_input(INPUT_POST, 'password');
+$host = "localhost";
+$dbusername = "root";
+$dbpassword = "";
+$dbname = "buyer-register";
 
-$con=new mysqli('localhost','root','form')
-;
-if($con){
-    //echo "Registration Successful";
-    $sql="insert into 'Buyer_registration_data' (username,email,password)values('$username','$email','$password')";
-    $result=mysqli_query($con,$sql);
-    fi($result){
-        //echo "Data inserted succesfully";
-    }else{
-        die(mysqli_error($con));
-    }
-}else{
-    die(mysqli_error($con));
+$conn = new mysqli($host, $dbusername, $dbpassword, $dbname);
+
+if(mysqli_connect_error()){
+    die('Connection Error('.mysqli_connect_errno().')'.mysqli_connect_error());
 }
+else{
+    $sql = "INSERT INTO buyer_registration_data (username, email, password) 
+    values('$username', '$email', '$password')";
+    if($conn->query($sql)){
+        echo "Registration Successful";
+    }
+    else{
+        echo "Error: ". $sql ."<br>". $conn->error;
+
+    }
+    $conn->close();
+
 }
 ?>
